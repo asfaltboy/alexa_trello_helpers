@@ -5,6 +5,19 @@ This skill provides some Trello commands that I found useful. It will eventually
 
 **[BETA WARNING]** This is currently in heavy development; most important it currently does not support account linking, thus only interacts with 1 Trello account as defined in the environment variables (see Deployment below).
 
+
+Features
+--------
+
+Below listed features either implemented or planned:
+
+- List boards
+- **(TODO)*** Set board as default
+- **(TODO)** List available lists on board X / default board
+- **(TODO)** List items in list Y on board X / default board
+- **(TODO)** Add Account Link to Trello OAuth 1.0; see http://code-coverage.net/building-amazon-alexa-skills-with-net/
+
+
 Setup Skill
 -----------
 
