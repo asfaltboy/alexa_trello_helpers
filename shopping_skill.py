@@ -11,6 +11,8 @@ token_map = {}
 
 @alex.intent("ListBoards")
 def list_boards_intent(slots, session):
+    if not token_map:
+        setup_tokens()
     assert session.user_id in token_map, (
         'Session.user_id "%s" was not found in token map!' % session.user_id)
     return alex.respond("Listing your boards")
@@ -25,7 +27,7 @@ def setup_tokens():
     assert api_key, 'Missing TRELLO_API_KEY value!'
     for key, value in environ.items():
         if key.startswith('TRELLO_API_TOKEN_'):
-            token_map[key[6:]] = value
+            token_map[key[17:]] = value
 
 
 if __name__ == '__main__':
