@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import alexandra
 
 alex = alexandra.Application()
+wsgi = alex.create_wsgi_app()
 token_map = {}
 
 

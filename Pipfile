@@ -9,7 +9,11 @@ name = "pypi"
 
 alexandra = "*"
 python-dotenv = "*"
+gunicorn = "*"
 
 
 [dev-packages]
 
+[requires]
+
+python_full_version = "3.6.2"
