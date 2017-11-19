@@ -65,6 +65,9 @@ Requirements
 - py-trello
 - python-dotenv
 - gunicorn
+- sqlalchemy
+- alembic
+- psycopg2
 
 
 .. _pipenv: https://docs.pipenv.org/

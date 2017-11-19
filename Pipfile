@@ -11,6 +11,9 @@ alexandra = "*"
 python-dotenv = "*"
 gunicorn = "*"
 py-trello = "*"
+sqlalchemy = "*"
+alembic = "*"
+"psycopg2" = "*"
 
 
 [dev-packages]
