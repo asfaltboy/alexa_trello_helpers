@@ -1,1 +1,1 @@
-web: gunicorn trello_intents:wsgi
+web: gunicorn trello_skill:wsgi

@@ -6,7 +6,7 @@ from trello import TrelloClient
 
 _client = None
 
-# TODO: use a persistant store instead of in-memory
+# TODO: use a persistent store instead of in-memory
 user_token_map = {}
 
 
