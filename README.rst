@@ -102,7 +102,7 @@ Create Database
 
 When managing our own database, i.e during development, we need to start by creating a database.
 
-.. code-blcok:: bash
+.. code-block:: bash
 
 	$ sudo su - postgres
 	(postgres) $ psql
