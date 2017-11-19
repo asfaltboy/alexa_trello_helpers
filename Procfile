@@ -1,1 +1,1 @@
-web: gunicorn shopping_skill:wsgi
+web: gunicorn trello_intents:wsgi
