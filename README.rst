@@ -1,7 +1,7 @@
 Introduction
 ============
 
-This skill provides some Trello commands that I found useful. It will eventually be expanded to support more commands and use cases.
+This skill provides some Trello_ commands that I found useful. It will eventually be expanded to support more commands and use cases.
 
 **[BETA WARNING]** This is currently in heavy development; most important it currently does not support account linking, thus only interacts with 1 Trello account as defined in the environment variables (see Deployment below).
 
@@ -74,23 +74,23 @@ Requirements
 
 The project was developed using new features from Python 3.6, so this is the only supported version, and there are no plans to backport.
 
-- alexandra
-- py-trello
-- python-dotenv
-- gunicorn
-- sqlalchemy
-- alembic
-- psycopg2
+- alexandra_
+- py-trello_
+- python-dotenv_
+- gunicorn_
+- sqlalchemy_
+- alembic_
+- psycopg2_
 
 Environment Variables
 ---------------------
 
 Configure at least the values below as required:
 
-- TRELLO_API_KEY: Trello API application key
-- TRELLO_API_SECRET: Trello API application secret
-- DATABASE_URL: Database URL (normally set by ``Heroku Postgres`` addon)
-- SKILL_ID: which skill to update when running ``update_models.py``
+- ``TRELLO_API_KEY``: Trello API application key
+- ``TRELLO_API_SECRET``: Trello API application secret
+- ``DATABASE_URL``: Database URL (normally set by ``Heroku Postgres`` addon)
+- ``SKILL_ID``: which skill to update when running ``update_models.py``
 
 Database Setup
 ==============
@@ -170,6 +170,13 @@ Later, prepend pipenv to any command you'd like to run. Here are some examples
    # run interactive shell
    pipenv shell
 
+.. _Trello: https://trello.com
+.. _alexandra: https://github.com/erik/alexandra
+.. _py-trello: https://github.com/sarumont/py-trello
+.. _python-dotenv: https://github.com/theskumar/python-dotenv
+.. _gunicorn: http://gunicorn.org/
+.. _sqlalchemy: http://www.sqlalchemy.org/
+.. _psycopg2: http://initd.org/psycopg/
 .. _pipenv: https://docs.pipenv.org/
 .. _ask: https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html
 .. _alembic: http://alembic.zzzcomputing.com/
