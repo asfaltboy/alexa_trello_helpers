@@ -15,7 +15,7 @@ def list_boards_intent(slots, session):
         setup_tokens()
     assert session.user_id in token_map, (
         'Session.user_id "%s" was not found in token map!' % session.user_id)
-    return alex.respond("Listing your boards")
+    return alexandra.respond("Listing your boards")
 
 
 def setup_tokens():
