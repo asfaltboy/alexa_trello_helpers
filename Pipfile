@@ -10,9 +10,12 @@ name = "pypi"
 alexandra = "*"
 python-dotenv = "*"
 gunicorn = "*"
+py-trello = "*"
 
 
 [dev-packages]
+
+
 
 [requires]
 

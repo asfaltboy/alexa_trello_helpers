@@ -4,18 +4,26 @@ from os import environ
 from dotenv import load_dotenv
 import alexandra
 
+from trello_utils import get_client
+
 alex = alexandra.Application()
 wsgi = alex.create_wsgi_app()
-token_map = {}
+user_token_map = {}
+
+
+def trello_client(session):
+    if not user_token_map:
+        api_key, token_map = setup_tokens()
+    assert session.user_id in token_map, (
+        'Session.user_id "%s" was not found in token map!' % session.user_id)
+    return get_client(api_key=api_key, token=token_map[session.user_id])
 
 
 @alex.intent("ListBoards")
 def list_boards_intent(slots, session):
-    if not token_map:
-        setup_tokens()
-    assert session.user_id in token_map, (
-        'Session.user_id "%s" was not found in token map!' % session.user_id)
-    return alexandra.respond("Listing your boards")
+    client = trello_client(session)
+    boards = ', '.join(l.name for l in client.list_boards())
+    return alexandra.respond(f"Listing your boards: {boards}")
 
 
 def setup_tokens():
@@ -27,7 +35,8 @@ def setup_tokens():
     assert api_key, 'Missing TRELLO_API_KEY value!'
     for key, value in environ.items():
         if key.startswith('TRELLO_API_TOKEN_'):
-            token_map[key[17:]] = value
+            user_token_map[key[17:]] = value
+    return api_key, user_token_map
 
 
 if __name__ == '__main__':
