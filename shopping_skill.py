@@ -12,11 +12,12 @@ user_token_map = {}
 
 
 def trello_client(session):
+    global user_token_map
     if not user_token_map:
-        api_key, token_map = setup_tokens()
-    assert session.user_id in token_map, (
+        api_key, user_token_map = setup_tokens()
+    assert session.user_id in user_token_map, (
         'Session.user_id "%s" was not found in token map!' % session.user_id)
-    return get_client(api_key=api_key, token=token_map[session.user_id])
+    return get_client(api_key=api_key, token=user_token_map[session.user_id])
 
 
 @alex.intent("ListBoards")

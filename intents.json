@@ -1,8 +1,30 @@
 {
-  "intents": [
-    {
-      "intent": "ListBoards",
-      "slots": []
-    }
-  ]
+  "languageModel": {
+    "intents": [
+      {
+        "name": "AMAZON.CancelIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.HelpIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.StopIntent",
+        "samples": []
+      },
+      {
+        "name": "ListBoards",
+        "samples": [
+          "what are the boards",
+          "which boards are available",
+          "list all boards",
+          "list my boards",
+          "list boards"
+        ],
+        "slots": []
+      }
+    ],
+    "invocationName": "trello board"
+  }
 }
