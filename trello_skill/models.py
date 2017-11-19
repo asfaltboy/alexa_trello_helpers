@@ -1,15 +1,35 @@
+import logging
 import os
 
 from sqlalchemy import (
     Column, Integer, String, ForeignKey, DateTime, create_engine)
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.sql import func
 
+logger = logging.getLogger(__name__)
 Base = declarative_base()
 
 
-class AlexaUser(Base):
+class SaveMixin(object):
+    """ Implement a helpful save method to create or update a record """
+    def save(self, session, force_update=False):
+        """
+        Use force_update to always flag the instance as dirty and commit
+        to database.
+        """
+        try:
+            if not self.id:
+                session.add(self)
+            session.commit()  # NOTE: we may not need to call this
+        except DBAPIError as exc:
+            logger.exception(f'Could not save AlexaUser instance in DB: {exc}')
+            session.rollback()
+        return self
+
+
+class AlexaUser(SaveMixin, Base):
     __tablename__ = 'alexa_users'
 
     id = Column(Integer, primary_key=True)
@@ -24,8 +44,12 @@ class AlexaUser(Base):
     def __repr__(self):
         return f'<AlexaUser {self.id}>'
 
+    @staticmethod
+    def get_user(user_id):
+        return session.query(AlexaUser).filter_by(user_id=user_id).first()
 
-class TrelloUser(Base):
+
+class TrelloUser(SaveMixin, Base):
     __tablename__ = 'trello_users'
 
     id = Column(Integer, primary_key=True)

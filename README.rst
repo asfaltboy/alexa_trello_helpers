@@ -15,7 +15,15 @@ Below listed features either implemented or planned:
 - **(TODO)** Set board as default
 - **(TODO)** List available lists on board X / default board
 - **(TODO)** List items in list Y on board X / default board
-- **(TODO)** Add Account Link to Trello OAuth 1.0; see http://code-coverage.net/building-amazon-alexa-skills-with-net/
+- **(TODO)** Account Link to Trello OAuth 1.0; see:
+
+  - http://code-coverage.net/building-amazon-alexa-skills-with-net/
+  - https://developer.amazon.com/docs/custom-skills/link-an-alexa-user-with-a-user-in-your-system.html
+
+- **(TODO)** Integrate with Alexa TODO / Shopping lists:
+
+  - https://developer.amazon.com/docs/custom-skills/access-the-alexa-shopping-and-to-do-lists.html
+
 - **(TODO)** Fully tested
 
 
@@ -117,7 +125,7 @@ To migrate the DB schema to latest revision (i.e ``head``), run ``upgrade``:
 
 .. code-block:: bash
 
-   alembic upgrade head
+   heroku run alembic upgrade head
 
 
 Create Migration

@@ -4,10 +4,9 @@ from os import environ
 from dotenv import load_dotenv
 from trello import TrelloClient
 
-_client = None
+from .models import AlexaUser, TrelloUser
 
-# TODO: use a persistent store instead of in-memory
-user_token_map = {}
+_client = None
 
 
 def get_client(api_key, token, api_secret=None, token_secret=None):
@@ -27,22 +26,71 @@ def get_client(api_key, token, api_secret=None, token_secret=None):
 
 
 def trello_client(session):
-    global user_token_map
-    if not user_token_map:
-        api_key, user_token_map = setup_tokens()
-    assert session.user_id in user_token_map, (
-        'Session.user_id "%s" was not found in token map!' % session.user_id)
-    return get_client(api_key=api_key, token=user_token_map[session.user_id])
+    """ Retreive the authenticated Trello API client """
+    api_key, token_map = setup_tokens()
+    if session.user_id in token_map:
+        token = token_map[session.user_id]
+    else:
+        token = retreive_user_token()
+    assert token, (
+        f'User "{session.user_id}" has no known token (OAuth not yet implemented)!')
+    return get_client(api_key=api_key, token=token)
 
 
 def setup_tokens():
-    """ Parse env vars for user Trello board tokens """
-    dotenv_path = join(dirname(__file__), '.env')
-    load_dotenv(dotenv_path, verbose=True)
+    """ Parse env vars and query DB for user Trello board tokens """
+    global _user_token_map
+    if not _user_token_map:
+        dotenv_path = join(dirname(__file__), '.env')
+        load_dotenv(dotenv_path, verbose=True)
 
-    api_key = environ.get('TRELLO_API_KEY')
-    assert api_key, 'Missing TRELLO_API_KEY value!'
-    for key, value in environ.items():
-        if key.startswith('TRELLO_API_TOKEN_'):
-            user_token_map[key[17:]] = value
-    return api_key, user_token_map
+        api_key = environ.get('TRELLO_API_KEY')
+        assert api_key, 'Missing TRELLO_API_KEY value!'
+        for key, value in environ.items():
+            if key.startswith('TRELLO_API_TOKEN_'):
+                _user_token_map[key[17:]] = value
+    return api_key, _user_token_map
+
+
+def get_or_create_user(user_id):
+    """
+    Retreive an Alexa user matching the given user_id.
+
+    Creates the user record if it does not yet exist.
+    """
+    assert user_id, f'Invalid `user_id` "{user_id}"'
+    user = AlexaUser.get_user(user_id)
+    if not user:
+        user = AlexaUser(user_id).save()
+    return user
+
+
+def retreive_user_token(user_id):
+    """
+    Retreive a Trello token for an Alexa user with given user_id
+
+    Returns None if user is no matching token is found.
+    """
+    user = get_or_create_user(user_id)
+    if user.trello_user:
+        return user.trello_user.auth_token
+    return None
+
+
+def save_user_token(user_id, api_key, token):
+    """
+    Save the given api_key and token to a TrelloUser related to the
+    AlexaUser record matching the igiven user_id
+    """
+    assert api_key and token, f'Invalid key / token: {api_key} / {token}'
+
+    user = get_or_create_user(user_id)
+    if not user.trello_user:
+        user.trello_user = TrelloUser(
+            auth_api_key=api_key,
+            auth_token=token).save()
+        user.save()
+    else:
+        user.trello_user.auth_api_key = api_key
+        user.trello_user.auth_token = token
+        user.trello_user.save()
