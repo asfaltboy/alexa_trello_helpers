@@ -8,7 +8,38 @@ from trello_utils import get_client
 
 alex = alexandra.Application()
 wsgi = alex.create_wsgi_app()
+
+# TODO: use a persistant store instead of in-memory
 user_token_map = {}
+
+
+@alex.intent("ListBoards")
+def list_boards_intent(slots, session):
+    client = trello_client(session)
+    boards = ', '.join(l.name for l in client.list_boards())
+    return alexandra.respond(f"Listing your boards: {boards}")
+
+
+@alex.intent("SetDefaultBoard")
+def set_default_board_intent(slots, session):
+    client = trello_client(session)
+    board = ', '.join(l.name for l in client.list_boards())
+    return alexandra.respond(f"Set the board {board} as default")
+
+
+@alex.intent("ListCardsInBoard")
+def list_cards_in_board_intent(slots, session):
+    client = trello_client(session)
+    boards = ', '.join(l.name for l in client.list_boards())
+    return alexandra.respond(f"Listing your boards: {boards}")
+
+
+
+@alex.intent("ListsInBoard")
+def lists_in_board_intent(slots, session):
+    client = trello_client(session)
+    boards = ', '.join(l.name for l in client.list_boards())
+    return alexandra.respond(f"Listing your boards: {boards}")
 
 
 def trello_client(session):
@@ -18,13 +49,6 @@ def trello_client(session):
     assert session.user_id in user_token_map, (
         'Session.user_id "%s" was not found in token map!' % session.user_id)
     return get_client(api_key=api_key, token=user_token_map[session.user_id])
-
-
-@alex.intent("ListBoards")
-def list_boards_intent(slots, session):
-    client = trello_client(session)
-    boards = ', '.join(l.name for l in client.list_boards())
-    return alexandra.respond(f"Listing your boards: {boards}")
 
 
 def setup_tokens():

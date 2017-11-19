@@ -1,30 +1,136 @@
 {
-  "languageModel": {
-    "intents": [
-      {
-        "name": "AMAZON.CancelIntent",
-        "samples": []
-      },
-      {
-        "name": "AMAZON.HelpIntent",
-        "samples": []
-      },
-      {
-        "name": "AMAZON.StopIntent",
-        "samples": []
-      },
-      {
-        "name": "ListBoards",
-        "samples": [
-          "what are the boards",
-          "which boards are available",
-          "list all boards",
-          "list my boards",
-          "list boards"
-        ],
-        "slots": []
-      }
-    ],
-    "invocationName": "trello board"
+  "interactionModel": {
+    "languageModel": {
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "ListBoards",
+          "samples": [
+            "what are the boards",
+            "which boards are available",
+            "list all boards",
+            "list my boards",
+            "list boards"
+          ],
+          "slots": []
+        },
+        {
+          "name": "SetDefaultBoard",
+          "samples": [
+            "set board {Board} as default",
+            "set default to board {Board}",
+            "make {Board} the default",
+            "make {Board} the new default",
+            "default to {Board}"
+          ],
+          "slots": [
+            {
+              "name": "Board",
+              "type": "BOARD_NAME"
+            }
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "BOARD_NAME",
+          "values": [
+            {
+              "id": null,
+              "name": {
+                "value": "Our board",
+                "synonyms": [
+                  "shared board"
+                ]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "My board",
+                "synonyms": [
+                  "mine board",
+                  "the board"
+                ]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "watch list",
+                "synonyms": [
+                  "watched",
+                  "watched list",
+                  "watching",
+                  "watching list"
+                ]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "travel",
+                "synonyms": [
+                  "travelling",
+                  "travel planning",
+                  "travel plans"
+                ]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "roadmap",
+                "synonyms": [
+                  "trello development roadmap"
+                ]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "development",
+                "synonyms": [
+                  "client development",
+                  "server development",
+                  "houses development",
+                  "devdocs documentation"
+                ]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "Planning",
+                "synonyms": [
+                  "plan in like a pro",
+                  "plan this event",
+                  "party planning"
+                ]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "Euro Python 2017",
+                "synonyms": []
+              }
+            }
+          ]
+        }
+      ],
+      "invocationName": "trello board"
+    }
   }
 }
