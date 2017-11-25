@@ -7,6 +7,7 @@ from trello import TrelloClient
 from .models import AlexaUser, TrelloUser
 
 _client = None
+_user_token_map = None
 
 
 def get_client(api_key, token, api_secret=None, token_secret=None):
@@ -15,7 +16,7 @@ def get_client(api_key, token, api_secret=None, token_secret=None):
     Oauth 1.0 transaction is completed.
     """
     global _client
-    if not _client:
+    if _client is None:
         _client = TrelloClient(
             api_key=api_key,
             token=token,
@@ -32,6 +33,7 @@ def trello_client(session):
         token = token_map[session.user_id]
     else:
         token = retreive_user_token()
+        token_map[session.user_id] = token
     assert token, (
         f'User "{session.user_id}" has no known token (OAuth not yet implemented)!')
     return get_client(api_key=api_key, token=token)
@@ -40,7 +42,8 @@ def trello_client(session):
 def setup_tokens():
     """ Parse env vars and query DB for user Trello board tokens """
     global _user_token_map
-    if not _user_token_map:
+    if _user_token_map is None:
+        _user_token_map = {}
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path, verbose=True)
 
