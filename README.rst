@@ -141,6 +141,21 @@ Create a new migration with the ``revision`` command:
 Development
 -----------
 
+Using dotenv with a ``.env`` file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create a ``.env`` file with e.g the following, to easily populate the command's environment when running locally:
+
+.. code-block:: bash
+
+   SKILL_ID=<your-alexa-skill-ID>
+   DATABASE_URL=<DMN-to-local-DB-instance>
+   TRELLO_API_KEY=<a-trello-API-key>
+
+
+Using ``pipenv``
+~~~~~~~~~~~~~~~~
+
 When running code locally, start by setting up the python environment.
 
 .. code-block:: bash
