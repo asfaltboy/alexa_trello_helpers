@@ -26,6 +26,21 @@
           "slots": []
         },
         {
+          "name": "ListsInBoard",
+          "samples": [
+            "which lists are available",
+            "what lists are in this board",
+            "which lists are in this board",
+            "what lists are in the board",
+            "which lists are in the board",
+            "list the lists in this board",
+            "list the lists",
+            "name the lists",
+            "say the lists"
+          ],
+          "slots": []
+        },
+        {
           "name": "GetDefaultBoard",
           "samples": [
             "what is my default board",

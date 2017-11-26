@@ -54,8 +54,21 @@ def set_default_board_intent(slots, session):
 @alex.intent("ListsInBoard")
 def lists_in_board_intent(slots, session):
     client = trello_client(session.user_id)
-    boards = ', '.join(l.name for l in client.list_boards())
-    return alexandra.respond(f"Listing your boards: {boards}")
+    board_name = slots.get('Board')
+    if board_name:
+        matches = get_boards_by_name(board_name, client.list_boards())
+        if not matches:
+            return alexandra.respond(f"Uknown board {board_name}")
+        if len(matches) > 1:
+            return alexandra.respond(f"More than one board matches name {board_name}")
+        board = matches[0]
+    else:
+        trello_user = get_trello_user(session.user_id)
+        if not trello_user.default_board:
+            return alexandra.respond(f"Board name needed to get lists")
+        board = client.get_board(trello_user.default_board)
+    list_names = ', '.join(l.name for l in board.list_lists())
+    return alexandra.respond(f"Board {board.name} has these lists: {list_names}")
 
 
 @alex.intent("ListCardsInBoard")
