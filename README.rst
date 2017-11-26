@@ -1,3 +1,5 @@
+.. image:: images/alexa_plus_trello.png
+
 Introduction
 ============
 
