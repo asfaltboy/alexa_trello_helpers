@@ -1,6 +1,6 @@
 import alexandra
 
-from .utils import trello_client
+from .utils import trello_client, get_trello_user
 
 alex = alexandra.Application()
 BOARDS_LAST_USED_COUNT = 5
@@ -25,11 +25,15 @@ def list_boards_intent(slots, session):
 def set_default_board_intent(slots, session):
     board = slots['Board']
     client = trello_client(session.user_id)
+    trello_user = get_trello_user(session.user_id)
     boards = [l.name for l in client.list_boards()]
     if not board or board not in boards:
         return alexandra.respond(f"Invalid board {board}")
-    # TODO: persist change to DB
-    return alexandra.respond(f"Set the board {board} as default")
+    # if trello_user.default_board:
+    #     return alexandra.reprompt("Your current default is {trello_user.default_board}, are you sure you want to replace it?")
+    trello_user.default_board = board
+    trello_user.save()
+    return alexandra.respond(f"I've set the board {board} as the default")
 
 
 @alex.intent("ListsInBoard")
