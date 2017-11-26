@@ -52,12 +52,17 @@ We can also update the model from the ask_ cli tool:
 
 .. code-block:: bash
 
-   ask api update-model  -f model.json -s <skill-id> -l <locale>
+   # first install the tool from npm and init credentials
+   npm i -g ask-cli
+   ask init
+
+   ask api update-model -f model.json -s <skill-id> -l <locale>
 
 To update all known languages of skill with ``$SKILL_ID`` (must be set in env), use the helper script:
 
 .. code-block:: bash
 
+   cd trello_skill/
    heroku run bash update_model.sh
 
 
@@ -219,7 +224,7 @@ Later, prepend pipenv to any command you'd like to run. Here are some examples
    pipenv run python trello_skill.py
 
    # update alexa interaction model
-   pipenv run bash update_model.sh
+   pipenv run bash trello_skill/update_model.sh
 
    # run interactive sysmtem shell
    pipenv shell
