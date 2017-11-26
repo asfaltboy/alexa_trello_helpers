@@ -67,6 +67,11 @@ class TrelloUser(SaveMixin, Base):
         self.auth_api_secret = auth_api_secret
         self.auth_token_secret = auth_token_secret
 
+    @staticmethod
+    def get_user(alexa_user_id):
+        return session.query(TrelloUser).join(AlexaUser).filter(
+            AlexaUser.user_id == alexa_user_id).first()
+
     def __repr__(self):
         return f'<TrelloUser {self.id}>'
 

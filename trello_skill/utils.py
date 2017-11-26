@@ -72,6 +72,16 @@ def get_or_create_user(user_id):
     return user
 
 
+def get_trello_user(alexa_user_id):
+    """
+    Retreive a Trello user matching an Alexa user with the given user_id.
+    """
+    assert alexa_user_id, f'Invalid `alexa_user_id` "{alexa_user_id}"'
+    user = TrelloUser.get_user(alexa_user_id)
+    assert user, 'No TrelloUser found for AlexaUser with id {alexa_user_id}'
+    return user
+
+
 def retreive_user_token(user_id):
     """
     Retreive a Trello token for an Alexa user with given user_id
