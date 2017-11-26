@@ -33,7 +33,10 @@
             "which is my default",
             "which is the default",
             "what's the default board",
-            "what's my default board"
+            "what's my default board",
+            "get my default board",
+            "get the default board",
+            "get default board"
           ],
           "slots": []
         },
