@@ -29,17 +29,24 @@ def get_default_board(slots, session):
     return alexandra.respond(f"The default board is: {trello_user.default_board}")
 
 
+def get_boards_by_name(name, boards):
+    return [l for l in boards if l.name.lower() == name]
+
 @alex.intent("SetDefaultBoard")
 def set_default_board_intent(slots, session):
     board = slots['Board']
     client = trello_client(session.user_id)
     trello_user = get_trello_user(session.user_id)
-    boards = [l.name for l in client.list_boards()]
-    if not board or board not in boards:
-        return alexandra.respond(f"Invalid board {board}")
-    # if trello_user.default_board:
-    #     return alexandra.reprompt("Your current default is {trello_user.default_board}, are you sure you want to replace it?")
-    trello_user.default_board = board
+    matches = get_boards_by_name(board, client.list_boards())
+    if not matches:
+        return alexandra.respond(f"Uknown board {board}")
+    if len(matches) > 1:
+        return alexandra.respond(f"More than one board matches name {board}")
+    if trello_user.default_board:
+        current_default = client.get_board(trello_user.default_board)
+        return alexandra.reprompt(f"Your current default is {current_default}, "
+                                  "are you sure you want to replace it?")
+    trello_user.default_board = matches[0].id  # save unique ID
     trello_user.save()
     return alexandra.respond(f"I've set the board {board} as the default")
 
