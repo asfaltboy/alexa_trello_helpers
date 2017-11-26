@@ -18,6 +18,7 @@ alembic = "*"
 
 [dev-packages]
 
+ipython = "*"
 
 
 [requires]

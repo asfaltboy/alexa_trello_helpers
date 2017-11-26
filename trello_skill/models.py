@@ -14,7 +14,7 @@ Base = declarative_base()
 
 class SaveMixin(object):
     """ Implement a helpful save method to create or update a record """
-    def save(self, session, force_update=False):
+    def save(self, force_update=False):
         """
         Use force_update to always flag the instance as dirty and commit
         to database.
@@ -73,7 +73,8 @@ class TrelloUser(SaveMixin, Base):
 
 # an Engine, which the Session will use for connection
 # resources
-engine = create_engine(os.environ.get('DATABASE_URL'))
+DEFAULT_DATABASE_URL = 'sqlite:///alexa_trello_skill.db'
+engine = create_engine(os.environ.get('DATABASE_URL') or DEFAULT_DATABASE_URL)
 
 # create a configured "Session" class
 Session = sessionmaker(bind=engine)

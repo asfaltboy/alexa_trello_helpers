@@ -7,7 +7,7 @@ from trello import TrelloClient
 from .models import AlexaUser, TrelloUser
 
 _client = None
-_user_token_map = None
+_api_key = _user_token_map = None
 
 
 def get_client(api_key, token, api_secret=None, token_secret=None):
@@ -26,33 +26,37 @@ def get_client(api_key, token, api_secret=None, token_secret=None):
     return _client
 
 
-def trello_client(session):
+def trello_client(user_id):
     """ Retreive the authenticated Trello API client """
     api_key, token_map = setup_tokens()
-    if session.user_id in token_map:
-        token = token_map[session.user_id]
+    if user_id in token_map:
+        token = token_map[user_id]
     else:
-        token = retreive_user_token()
-        token_map[session.user_id] = token
+        token = retreive_user_token(user_id)
+        if token:
+            token_map[user_id] = token
     assert token, (
-        f'User "{session.user_id}" has no known token (OAuth not yet implemented)!')
+        f'User "{user_id}" has no known token (OAuth not yet implemented)!')
     return get_client(api_key=api_key, token=token)
 
 
 def setup_tokens():
     """ Parse env vars and query DB for user Trello board tokens """
-    global _user_token_map
+    global _user_token_map, _api_key
+    if _api_key is None:
+        _api_key = environ.get('TRELLO_API_KEY')
+        assert _api_key, 'Missing TRELLO_API_KEY value!'
+
     if _user_token_map is None:
+        # optional initial "cache" population skips a DB query
         _user_token_map = {}
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path, verbose=True)
 
-        api_key = environ.get('TRELLO_API_KEY')
-        assert api_key, 'Missing TRELLO_API_KEY value!'
         for key, value in environ.items():
             if key.startswith('TRELLO_API_TOKEN_'):
                 _user_token_map[key[17:]] = value
-    return api_key, _user_token_map
+    return _api_key, _user_token_map
 
 
 def get_or_create_user(user_id):

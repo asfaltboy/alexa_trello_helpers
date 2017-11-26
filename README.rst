@@ -64,9 +64,9 @@ To update all known languages of skill with ``$SKILL_ID`` (must be set in env), 
 Deployment
 ==========
 
-During development I found it easiest to use heroku, (however any host would work just as fine).
+Personally I found it easiest to use heroku_, (however any host would work just as fine).
 
-Using heroku means that dependencies are specified in the ``Pipfile`` (i.e use pipenv_), and certain environment variables must be set in ``heroku config``.
+Using heroku_ means that dependencies are specified in the ``Pipfile`` (i.e use pipenv_), and certain environment variables must be set in ``heroku config``.
 
 
 Requirements
@@ -78,7 +78,7 @@ The project was developed using new features from Python 3.6, so this is the onl
 - py-trello_
 - python-dotenv_
 - gunicorn_
-- sqlalchemy_
+- SQLAlchemy_
 - alembic_
 - psycopg2_
 
@@ -88,9 +88,15 @@ Environment Variables
 Configure at least the values below as required:
 
 - ``TRELLO_API_KEY``: Trello API application key
-- ``TRELLO_API_SECRET``: Trello API application secret
-- ``DATABASE_URL``: Database URL (normally set by ``Heroku Postgres`` addon)
 - ``SKILL_ID``: which skill to update when running ``update_models.py``
+- ``DATABASE_URL``: Database DMN
+
+To find your ``TRELLO_API_KEY`` visit https://trello.com/app-key
+
+For the ``SKILL_ID``, visit your alexa skill page at https://developer.amazon.com/edw/home.html
+
+``DATABASE_URL`` is normally set by heroku-postgres_ addon in a deployed environment. In development, we default to ``sqlite:///alexa_trello_skill.db`` if the variable is unset.
+Change this to whatever DB or driver you want to run. Follow the `SQLAlchemy url documentation`_ to learn more.
 
 Database Setup
 ==============
@@ -115,8 +121,7 @@ When managing our own database, i.e during development, we need to start by crea
 Database Schema Migrations
 --------------------------
 
-We use the alembic_ package to maintain migrations.
-
+We use the alembic_ package to maintain migrations. Here are some common commands we normally need to run.
 
 Run Migrations
 ~~~~~~~~~~~~~~
@@ -138,6 +143,35 @@ Create a new migration with the ``revision`` command:
    alembic revision --autogenerate
 
 
+Add a Trello token for an alexa user to the Database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We have yet to implement the authentication link to allow alexa users to connect the skill to Trello OAuth 1.0. Thus, we need to manually add users to the application to be able to access a Trello account.
+
+This is easy to done in shell:
+
+.. code-block:: bash
+
+   # open interactive python shell (if in dev)
+   pipenv run ipython
+
+   # Or, if in production, use heroku's python
+   heroku run python
+
+.. code-block:: python
+
+   >>> from trello_skill.utils import trello_client, save_user_token, setup_tokens
+   >>> user_id = 'amzn1.ask.account.AABBCC...'  # your alexa ID
+
+   >>> # Check if token for user already saved
+   >>> client = trello_client(user_id=user_id)
+   AssertionError: User "amzn1.ask.account.AABBCC..." has no known token (OAuth not yet implemented)!
+
+   >>> # if the error is raised, we need to save it
+   >>> token = '4534534...'
+   >>> api_key, token_map = setup_tokens()
+   >>> save_user_token(user_id, api_key, token)
+
 Development
 -----------
 
@@ -148,7 +182,7 @@ Create a ``.env`` file with e.g the following, to easily populate the command's 
 
 .. code-block:: bash
 
-   SKILL_ID=<your-alexa-skill-ID>
+   SKILL_ID=<your-alexa-skill-ID>  # obtain in skill mgmt page
    DATABASE_URL=<DMN-to-local-DB-instance>
    TRELLO_API_KEY=<a-trello-API-key>
 
@@ -161,11 +195,16 @@ When running code locally, start by setting up the python environment.
 .. code-block:: bash
 
    pip install pipenv
-   pipenv install
+   pipenv install -d  # install addl packages e.g ipython
+
+The above command may offer to install python 3.6.2 if it's not currently installed and your system has pyenv_.
 
 Later, prepend pipenv to any command you'd like to run. Here are some examples
 
 .. code-block:: bash
+
+   # if you didn't install the package in editable mode, set your python path
+   export PYTHONPATH=.
 
    # make migration
    pipenv run alembic revision --autogenerate
@@ -182,16 +221,23 @@ Later, prepend pipenv to any command you'd like to run. Here are some examples
    # update alexa interaction model
    pipenv run bash update_model.sh
 
-   # run interactive shell
+   # run interactive sysmtem shell
    pipenv shell
+
+   # run interactive python shell (if dev deps installed)
+   pipenv run ipython
 
 .. _Trello: https://trello.com
 .. _alexandra: https://github.com/erik/alexandra
 .. _py-trello: https://github.com/sarumont/py-trello
 .. _python-dotenv: https://github.com/theskumar/python-dotenv
 .. _gunicorn: http://gunicorn.org/
-.. _sqlalchemy: http://www.sqlalchemy.org/
+.. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _psycopg2: http://initd.org/psycopg/
 .. _pipenv: https://docs.pipenv.org/
 .. _ask: https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html
 .. _alembic: http://alembic.zzzcomputing.com/
+.. _pyenv: https://github.com/pyenv/pyenv
+.. _heroku: https://www.heroku.com
+.. _heroku-postgres: https://www.heroku.com/postgres
+.. _SQLAlchemy url documentation: http://docs.sqlalchemy.org/en/latest/core/engines.html#database-urls
