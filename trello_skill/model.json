@@ -26,6 +26,18 @@
           "slots": []
         },
         {
+          "name": "GetDefaultBoard",
+          "samples": [
+            "what is my default board",
+            "what is the default board",
+            "which is my default",
+            "which is the default",
+            "what's the default board",
+            "what's my default board",
+          ],
+          "slots": []
+        },
+        {
           "name": "SetDefaultBoard",
           "samples": [
             "set board {Board} as default",

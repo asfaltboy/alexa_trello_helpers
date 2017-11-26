@@ -12,7 +12,7 @@ Features
 Below listed features either implemented or planned:
 
 - List boards
-- **(TODO)** Set board as default
+- Get / Set board as default
 - **(TODO)** List available lists on board X / default board
 - **(TODO)** List items in list Y on board X / default board
 - **(TODO)** Account Link to Trello OAuth 1.0; see:

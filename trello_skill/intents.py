@@ -21,6 +21,14 @@ def list_boards_intent(slots, session):
     )
 
 
+@alex.intent("GetDefaultBoard")
+def get_default_board(slots, session):
+    trello_user = get_trello_user(session.user_id)
+    if not trello_user.default_board:
+        return alexandra.respond(f"There is no default board set")
+    return alexandra.respond(f"The default board is: {trello_user.default_board}")
+
+
 @alex.intent("SetDefaultBoard")
 def set_default_board_intent(slots, session):
     board = slots['Board']
