@@ -23,4 +23,4 @@ ipython = "*"
 
 [requires]
 
-python_full_version = "3.6.2"
+python_full_version = "3.6.3"
